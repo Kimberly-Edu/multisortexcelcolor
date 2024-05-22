@@ -3,13 +3,14 @@ import os
 from random import randint
 data = []
 sort_order = ["Type", "Rarity", "Element", "Name", "Quantity", "Sell"]  # Custom
-sort_order = ["Type", "Rarity", "Element", "Name", "Quantity", "Sell"] 
+sort_order = ["Type", "Rarity", "Element", "Name", "Quantity"]
 all_keys = ["Ref", "Type", "Rarity", "Element", "Name", "Quantity", "Sell"]  # Must contain all header keys
 cat_keys = ["Type", "Rarity", "Element"]  # categorical
 num_keys = ["Ref", "Quantity", "Sell", "Name"]  # numerical. (Name is encoded... decoded?)
 filename = "myData.csv"
 fileout = "myDataSorted.csv"
 fileout2 = "myDataSorted.xlsx"
+ignore_non_sorted = True
 
 
 def base27encoder(myString):  # a to z (97-122) mapped to some integer in base10.
@@ -25,14 +26,7 @@ def base27encoder(myString):  # a to z (97-122) mapped to some integer in base10
             char = ord(myString[i]) - 97 + 1  # only lower case letters, i'm not checking.
         total += char*(27**(len(myString) - i - 1))  # reversed order... oops!
     return total
-print(base27encoder('aaa'))
-print(base27encoder('baa'))
-print(base27encoder('zzz'))
-print(base27encoder('000'))
-print(base27encoder('a00'))
-print(base27encoder('brarmoypaa'))
-print(base27encoder('kghdszpsba'))
-print(base27encoder('ishfvcasca'))
+# try print(base27encoder('aaa'))
 # quit()
 
 
@@ -211,6 +205,9 @@ row_no = 1
 for row in output:
     class_no = 0
     for CLASS in all_keys:
+        if ignore_non_sorted and CLASS not in sort_order:  # skip
+            continue
+
         if row.get(CLASS) is not None:  # https://stackoverflow.com/questions/23861680/convert-spreadsheet-number-to-column-letter
             # for numerical, fit 0 to max number
             rgba = cmap(0.01)
