@@ -206,6 +206,7 @@ for row in output:
     class_no = 0
     for CLASS in all_keys:
         if ignore_non_sorted and CLASS not in sort_order:  # skip
+            class_no += 1  # fix
             continue
 
         if row.get(CLASS) is not None:  # https://stackoverflow.com/questions/23861680/convert-spreadsheet-number-to-column-letter
